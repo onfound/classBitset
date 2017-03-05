@@ -16,7 +16,7 @@ public class Bitset {
 
     @Override
     public String toString() {
-        StringBuffer result = new StringBuffer("{");
+        StringBuilder result = new StringBuilder("{");
         for (int j = 0; j < this.powerUniversum; j++) {
             int mask = 1 << j % 8;
             if (mask == (mask & (int) bits.charAt(j / 8))) {
@@ -76,11 +76,9 @@ public class Bitset {
     }
 
     public void not() {
-        StringBuffer bitcross = new StringBuffer();
         for (int i = 0; i < powerUniversum / 8 +1; i++) {
-            bitcross.replace(i, i + 1, String.valueOf(Character.toChars(255-(int) bits.charAt(i))));
+            bits.replace(i, i + 1, String.valueOf(Character.toChars(255-(int) bits.charAt(i))));
         }
-        this.bits = bitcross;
     }
 
     Boolean belong(int i) {
