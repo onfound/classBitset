@@ -7,18 +7,13 @@ import java.util.HashSet;
  */
 public class Test {
     public static void main(String[] args) {
-        Bitset name1 = new Bitset(12);
-        Bitset name2 = new Bitset(12);
-        int[] set = {1,2,3,4,5,6};
-        int[] set1 = {5,6,7,8,9};
-        name1.add(set);
-        name2.add(set1);
-        name1.cross(name2);
-        System.out.println(name1.belong(3));
+        Bitset name1 = new Bitset(15);
+        Bitset name2 = new Bitset(44);
+        int[] set1 = {0,2,4,6};
+        int[] set2 = {35};
+        name1.add(set1);
+        name2.add(set2);
+        name1.supplement();
         System.out.println(name1);
-        System.out.println(String.valueOf(Character.toChars(255)));
     }
-//        String.valueOf(Character.toChars(0)) "символ  с 00000000" в стринг формате
-
-
 }
