@@ -131,8 +131,4 @@ public class Bitset {
         if (result.length() > 1) result.delete(1, 3);
         return result.append("}").toString();
     }
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 }
