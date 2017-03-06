@@ -1,4 +1,4 @@
-import java.util.Objects;
+
 
 /**
  * Created by ilya on 14.02.17.
@@ -12,19 +12,6 @@ public class Bitset {
         for (int i = 0; i < powerUniversum / 8; i++) {
             bits.append(Character.toChars(0));
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder("{");
-        for (int j = 0; j < this.powerUniversum; j++) {
-            int mask = 1 << j % 8;
-            if (mask == (mask & (int) bits.charAt(j / 8))) {
-                result.append(", ").append(j);
-            }
-        }
-        if (result.length() > 1) result.delete(1, 3);
-        return result.append("}").toString();
     }
 
     // Добавление 1 неотрицательного элемента в множество.
@@ -78,7 +65,7 @@ public class Bitset {
 
     public void or(Bitset bs) {
         StringBuffer bitcross;
-        bitcross = bits.length() > bs.bits.length() ? bits : bs.bits;
+        bitcross = new StringBuffer(bits.length() > bs.bits.length() ? bits : bs.bits);
         for (int i = 0; i < Math.min(powerUniversum, bs.powerUniversum) / 8 + 1; i++) {
             bitcross.replace(i, i + 1, String.valueOf(Character.toChars((int) bits.charAt(i) | (int) bs.bits.charAt(i))));
         }
@@ -130,5 +117,22 @@ public class Bitset {
         int result = powerUniversum;
         result = 31 * result + (bits != null ? bits.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("{");
+        for (int j = 0; j < this.powerUniversum; j++) {
+            int mask = 1 << j % 8;
+            if (mask == (mask & (int) bits.charAt(j / 8))) {
+                result.append(", ").append(j);
+            }
+        }
+        if (result.length() > 1) result.delete(1, 3);
+        return result.append("}").toString();
+    }
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
