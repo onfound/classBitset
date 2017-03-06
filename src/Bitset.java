@@ -16,7 +16,7 @@ public class Bitset {
 
     // Добавление 1 неотрицательного элемента в множество.
 
-    public void add(int i) {
+    void add(int i) {
         int octetPosition = i / 8;
         if (i >= powerUniversum)
             throw new IndexOutOfBoundsException("Outside of the Universum");
@@ -25,7 +25,7 @@ public class Bitset {
 
     // Добавление массива из неотрицательных чисел.
 
-    public void add(int[] i) {
+    void add(int[] i) {
         for (int element : i) {
             add(element);
         }
@@ -33,14 +33,14 @@ public class Bitset {
 
     // Удаление 1 неотрицательного элемента.
 
-    public void remove(int i) {
+    void remove(int i) {
         int octetPosition = i / 8;
         bits.replace(octetPosition, octetPosition + 1, String.valueOf(Character.toChars((int) bits.charAt(octetPosition) ^ 1 << i % 8)));
     }
 
     // Удаление массива неотрицательных элементов.
 
-    public void remove(int[] i) {
+    void remove(int[] i) {
         for (int element : i
                 ) {
             if (belong(element)) remove(element);
@@ -63,7 +63,7 @@ public class Bitset {
 
     // Объединение множеств.
 
-    public void or(Bitset bs) {
+    void or(Bitset bs) {
         StringBuffer bitcross;
         bitcross = new StringBuffer(bits.length() > bs.bits.length() ? bits : bs.bits);
         for (int i = 0; i < Math.min(powerUniversum, bs.powerUniversum) / 8 + 1; i++) {
@@ -75,7 +75,7 @@ public class Bitset {
 
     // Дополнение множеств.
 
-    public void not() {
+    void not() {
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
             bits.replace(i, i + 1, String.valueOf(Character.toChars(255 - (int) bits.charAt(i))));
         }
@@ -90,7 +90,7 @@ public class Bitset {
 
     // Мощность множества.
 
-    public int powerSet() {
+    int powerSet() {
         int count = 0;
         for (int i = 0; i < this.powerUniversum; i++) {
             int mask = 1 << i % 8;
@@ -108,8 +108,7 @@ public class Bitset {
 
         Bitset bitset = (Bitset) o;
 
-        if (powerUniversum != bitset.powerUniversum) return false;
-        return bits != null ? bits.equals(bitset.bits) : bitset.bits == null;
+        return powerUniversum == bitset.powerUniversum && (bits != null ? bits.equals(bitset.bits) : bitset.bits == null);
     }
 
     @Override
