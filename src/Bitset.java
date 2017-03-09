@@ -5,13 +5,13 @@ import java.util.Arrays;
  */
 public class Bitset {
     final private int powerUniversum;
-    final private char[] bits1;
+    final private char[] bits;
 
     Bitset(int powerUniversum) {
         this.powerUniversum = powerUniversum;
-        bits1 = new char[powerUniversum / 8 + 1];
+        bits = new char[powerUniversum / 8 + 1];
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            bits1[i] = 0;
+            bits[i] = 0;
         }
     }
 
@@ -21,7 +21,7 @@ public class Bitset {
         int octetPosition = i / 8;
         if (i >= powerUniversum)
             throw new IllegalArgumentException("Outside of the Universum");
-        bits1[octetPosition] = Character.toChars(bits1[octetPosition] | 1 << i % 8)[0];
+        bits[octetPosition] = Character.toChars(bits[octetPosition] | 1 << i % 8)[0];
     }
 
     // Добавление массива из неотрицательных чисел.
@@ -37,7 +37,7 @@ public class Bitset {
     void remove(int i) {
         if (contain(i)) {
             int octetPosition = i / 8;
-            bits1[octetPosition] = Character.toChars(bits1[octetPosition] ^ 1 << i % 8)[0];
+            bits[octetPosition] = Character.toChars(bits[octetPosition] ^ 1 << i % 8)[0];
         }
     }
 
@@ -56,11 +56,10 @@ public class Bitset {
         if (powerUniversum != bs.powerUniversum) throw new IllegalArgumentException("Different powerUniversum");
         Bitset result = new Bitset(powerUniversum);
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            result.bits1[i] = Character.toChars(bs.bits1[i] & bits1[i])[0];
+            result.bits[i] = Character.toChars(bs.bits[i] & bits[i])[0];
         }
         return result;
     }
-
 
     // Объединение множеств.
 
@@ -68,19 +67,20 @@ public class Bitset {
         if (powerUniversum != bs.powerUniversum) throw new IllegalArgumentException("Different powerUniversum");
         Bitset result = new Bitset(powerUniversum);
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            result.bits1[i] = Character.toChars(bs.bits1[i] | bits1[i])[0];
+            result.bits[i] = Character.toChars(bs.bits[i] | bits[i])[0];
         }
         return result;
     }
 
     // Дополнение множеств.
+
     Bitset not() {
         Bitset result = new Bitset(powerUniversum);
         int octetPosition = powerUniversum / 8;
         for (int i = 0; i < octetPosition + 1; i++) {
-            result.bits1[i] = Character.toChars(255 - bits1[i])[0];
+            result.bits[i] = Character.toChars(255 - bits[i])[0];
         }
-        result.bits1[octetPosition] = Character.toChars(result.bits1[octetPosition] & 127 >> 7 - powerUniversum % 8)[0];
+        result.bits[octetPosition] = Character.toChars(result.bits[octetPosition] & 127 >> 7 - powerUniversum % 8)[0];
         return result;
     }
 
@@ -88,7 +88,7 @@ public class Bitset {
 
     Boolean contain(int i) {
         int bit = i % 8;
-        return ((bits1[i / 8] & 1 << bit) == 1 << bit);
+        return ((bits[i / 8] & 1 << bit) == 1 << bit);
     }
 
     // Мощность множества.
@@ -97,7 +97,7 @@ public class Bitset {
         int count = 0;
         for (int i = 0; i < powerUniversum; i++) {
             int mask = 1 << i % 8;
-            if (mask == (mask & bits1[i / 8])) {
+            if (mask == (mask & bits[i / 8])) {
                 count++;
             }
         }
@@ -109,7 +109,7 @@ public class Bitset {
         StringBuilder result = new StringBuilder("{");
         for (int j = 0; j < powerUniversum; j++) {
             int mask = 1 << j % 8;
-            if (mask == (mask & bits1[j / 8])) {
+            if (mask == (mask & bits[j / 8])) {
                 result.append(", ").append(j);
             }
         }
@@ -124,14 +124,13 @@ public class Bitset {
 
         Bitset bitset = (Bitset) o;
 
-        if (powerUniversum != bitset.powerUniversum) return false;
-        return Arrays.equals(bits1, bitset.bits1);
+        return powerUniversum == bitset.powerUniversum && Arrays.equals(bits, bitset.bits);
     }
 
     @Override
     public int hashCode() {
         int result = powerUniversum;
-        result = 31 * result + Arrays.hashCode(bits1);
+        result = 31 * result + Arrays.hashCode(bits);
         return result;
     }
 }
