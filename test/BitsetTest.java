@@ -2,9 +2,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-/**
- * Created by ilya on 05.03.17.
- */
 public class BitsetTest {
     private Bitset bs = new Bitset(100);
     private Bitset bs1 = new Bitset(100);
@@ -65,9 +62,14 @@ public class BitsetTest {
         Bitset bsNot = new Bitset(0);
         Bitset bsNot1 = new Bitset(10);
         Bitset bsNot2 = new Bitset(10);
+        Bitset bsTest1 = new Bitset(15);
+        Bitset bsTest2 = new Bitset(15);
+        bsTest1.add(new int[]{0,2,4,6,8,10,12,14});
+        bsTest2.add(new int[]{1,3,5,7,9,11,13});
         bsNot2.add(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
         assertEquals(new Bitset(0), bsNot.not());
         assertEquals(bsNot2, bsNot1.not());
+        assertEquals(bsTest1.not(), bsTest2);
     }
 
     @Test
@@ -83,8 +85,8 @@ public class BitsetTest {
     public void powerSet() throws Exception {
         bs1.add(new int[]{0, 1, 4, 6, 13, 25, 28, 23});
         bs2.add(new int[]{1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3});
-        assertEquals(8, bs1.powerSet());
-        assertEquals(3, bs2.powerSet());
-        assertEquals(0, bs4.powerSet());
+        assertEquals(8, bs1.cardinality());
+        assertEquals(3, bs2.cardinality());
+        assertEquals(0, bs4.cardinality());
     }
 }

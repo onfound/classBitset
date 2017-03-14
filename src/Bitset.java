@@ -1,27 +1,22 @@
 import java.util.Arrays;
 
-/**
- * Created by ilya on 14.02.17.
- */
-public class Bitset {
+public class
+Bitset {
     final private int powerUniversum;
-    final private char[] bits;
+    final private byte[] bits;
 
     Bitset(int powerUniversum) {
         this.powerUniversum = powerUniversum;
-        bits = new char[powerUniversum / 8 + 1];
-        for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            bits[i] = 0;
-        }
+        bits = new byte[powerUniversum / 8 + 1];
     }
 
     // Добавление 1 неотрицательного элемента в множество.
 
     void add(int i) {
         int octetPosition = i / 8;
-        if (i >= powerUniversum)
-            throw new IllegalArgumentException("Outside of the Universum");
-        bits[octetPosition] = Character.toChars(bits[octetPosition] | 1 << i % 8)[0];
+        if (i >= powerUniversum && i < 0)
+            throw new IllegalArgumentException();
+        bits[octetPosition] = (byte) (bits[octetPosition] | 1 << i % 8);
     }
 
     // Добавление массива из неотрицательных чисел.
@@ -37,7 +32,7 @@ public class Bitset {
     void remove(int i) {
         if (contain(i)) {
             int octetPosition = i / 8;
-            bits[octetPosition] = Character.toChars(bits[octetPosition] ^ 1 << i % 8)[0];
+            bits[octetPosition] = (byte) (bits[octetPosition] ^ 1 << i % 8);
         }
     }
 
@@ -46,7 +41,7 @@ public class Bitset {
     void remove(int[] i) {
         for (int element : i
                 ) {
-            if (contain(element)) remove(element);
+            remove(element);
         }
     }
 
@@ -56,7 +51,7 @@ public class Bitset {
         if (powerUniversum != bs.powerUniversum) throw new IllegalArgumentException("Different powerUniversum");
         Bitset result = new Bitset(powerUniversum);
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            result.bits[i] = Character.toChars(bs.bits[i] & bits[i])[0];
+            result.bits[i] = (byte) (bs.bits[i] & bits[i]);
         }
         return result;
     }
@@ -67,7 +62,7 @@ public class Bitset {
         if (powerUniversum != bs.powerUniversum) throw new IllegalArgumentException("Different powerUniversum");
         Bitset result = new Bitset(powerUniversum);
         for (int i = 0; i < powerUniversum / 8 + 1; i++) {
-            result.bits[i] = Character.toChars(bs.bits[i] | bits[i])[0];
+            result.bits[i] = (byte) (bs.bits[i] | bits[i]);
         }
         return result;
     }
@@ -78,28 +73,25 @@ public class Bitset {
         Bitset result = new Bitset(powerUniversum);
         int octetPosition = powerUniversum / 8;
         for (int i = 0; i < octetPosition + 1; i++) {
-            result.bits[i] = Character.toChars(255 - bits[i])[0];
+            result.bits[i] = (byte) (~bits[i]);    //255-bits[i] инвертирует
         }
-        result.bits[octetPosition] = Character.toChars(result.bits[octetPosition] & 127 >> 7 - powerUniversum % 8)[0];
+        result.bits[octetPosition] = (byte) (result.bits[octetPosition] & 127 >> 7 - powerUniversum % 8); // powerUniversum % 8 = 0 тогда в конструкторе добавлен запасной байт
         return result;
     }
 
     // Проверка принадлежности элемента множеству.
 
     Boolean contain(int i) {
-        int bit = i % 8;
-        return ((bits[i / 8] & 1 << bit) == 1 << bit);
+        int mask = 1 << i % 8;
+        return ((bits[i / 8] & mask) == mask);
     }
 
     // Мощность множества.
 
-    int powerSet() {
+    int cardinality() {
         int count = 0;
         for (int i = 0; i < powerUniversum; i++) {
-            int mask = 1 << i % 8;
-            if (mask == (mask & bits[i / 8])) {
-                count++;
-            }
+            if (contain(i)) count++;
         }
         return count;
     }
@@ -108,10 +100,7 @@ public class Bitset {
     public String toString() {
         StringBuilder result = new StringBuilder("{");
         for (int j = 0; j < powerUniversum; j++) {
-            int mask = 1 << j % 8;
-            if (mask == (mask & bits[j / 8])) {
-                result.append(", ").append(j);
-            }
+            if (contain(j)) result.append(", ").append(j);
         }
         if (result.length() > 1) result.delete(1, 3);
         return result.append("}").toString();
